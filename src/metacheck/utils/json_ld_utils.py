@@ -440,7 +440,7 @@ def get_suggestion_text(pitfall_code: str) -> str:
 
         # Warnings
         "W001": "Add version numbers to your dependencies. This provides stability for users and allows reproducibility across different environments.",
-        "W002": "You need to align the version in your metadata file with your latest release tag. Automating this synchronization as part of your release process is highly recommended.",
+        "W002": "The data in the metadata file should be updated to be aligned with the date of the latest release. Automating this synchronization as part of your release process is highly recommended.",
         "W003": "Make sure you are using the correct licenses. This avoids confusion about terms of use and ensures full transparency.",
         "W004": "Include version numbers for each programming language used. Defining these helps ensure reproducibility and compatibility across systems.",
         "W005": "Rewrite your dependencies as a proper list, with each item separated and preferably with their versions. This makes them easier to parse for metadata systems.",
