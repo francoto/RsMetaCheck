@@ -92,7 +92,7 @@ class TestDetectGitRemoteShorthandPitfall:
     """Test suite for detect_git_remote_shorthand_pitfall function"""
 
     @pytest.mark.parametrize(
-        "somef_data,file_name,expected_has_pitfall,expected_url,expected_source_file", [
+        "somef_data,file_name,expected_has_warning,expected_url,expected_source_file", [
             # No code_repository key
             (
                     {},
@@ -329,19 +329,19 @@ class TestDetectGitRemoteShorthandPitfall:
             ),
         ])
     def test_detect_git_shorthand_scenarios(self, somef_data, file_name,
-                                            expected_has_pitfall, expected_url,
+                                            expected_has_warning, expected_url,
                                             expected_source_file):
         """Test various scenarios for Git remote shorthand detection"""
         with patch('metacheck.scripts.warnings.w010.extract_metadata_source_filename',
                    return_value=expected_source_file):
             result = detect_git_remote_shorthand_pitfall(somef_data, file_name)
 
-            assert result["has_pitfall"] == expected_has_pitfall
+            assert result["has_warning"] == expected_has_warning
             assert result["file_name"] == file_name
             assert result["repository_url"] == expected_url
-            assert result["is_shorthand"] == expected_has_pitfall
+            assert result["is_shorthand"] == expected_has_warning
 
-            if expected_has_pitfall:
+            if expected_has_warning:
                 assert result["metadata_source_file"] == expected_source_file
 
     def test_result_structure(self):
@@ -349,7 +349,7 @@ class TestDetectGitRemoteShorthandPitfall:
         somef_data = {}
         result = detect_git_remote_shorthand_pitfall(somef_data, "test.json")
 
-        assert "has_pitfall" in result
+        assert "has_warning" in result
         assert "file_name" in result
         assert "repository_url" in result
         assert "source" in result
@@ -374,7 +374,7 @@ class TestDetectGitRemoteShorthandPitfall:
         with patch('metacheck.scripts.warnings.w010.extract_metadata_source_filename',
                    return_value=metadata_file):
             result = detect_git_remote_shorthand_pitfall(somef_data, "test.json")
-            assert result["has_pitfall"] is True
+            assert result["has_warning"] is True
             assert result["metadata_source_file"] == metadata_file
 
     def test_stops_at_first_match(self):
@@ -398,7 +398,7 @@ class TestDetectGitRemoteShorthandPitfall:
                    side_effect=["codemeta.json", "package.json"]):
             result = detect_git_remote_shorthand_pitfall(somef_data, "test.json")
 
-            assert result["has_pitfall"] is True
+            assert result["has_warning"] is True
             assert result["repository_url"] == "github.com:user/repo1.git"
 
     @pytest.mark.parametrize("shorthand_url", [
@@ -421,7 +421,7 @@ class TestDetectGitRemoteShorthandPitfall:
         with patch('metacheck.scripts.warnings.w010.extract_metadata_source_filename',
                    return_value="codemeta.json"):
             result = detect_git_remote_shorthand_pitfall(somef_data, "test.json")
-            assert result["has_pitfall"] is True
+            assert result["has_warning"] is True
             assert result["repository_url"] == shorthand_url
 
     def test_missing_technique_field(self):
@@ -437,4 +437,4 @@ class TestDetectGitRemoteShorthandPitfall:
                    return_value="codemeta.json"):
             result = detect_git_remote_shorthand_pitfall(somef_data, "test.json")
             # Should still detect based on source matching
-            assert result["has_pitfall"] is True
+            assert result["has_warning"] is True

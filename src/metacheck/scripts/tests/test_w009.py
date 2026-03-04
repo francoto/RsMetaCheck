@@ -80,7 +80,7 @@ class TestDetectDevelopmentStatusUrlPitfall:
     """Test suite for detect_development_status_url_pitfall function"""
 
     @pytest.mark.parametrize(
-        "somef_data,file_name,expected_has_pitfall,expected_status,expected_is_url", [
+        "somef_data,file_name,expected_has_warning,expected_status,expected_is_url", [
             # No development_status key
             (
                     {},
@@ -332,12 +332,12 @@ class TestDetectDevelopmentStatusUrlPitfall:
             ),
         ])
     def test_detect_development_status_url_scenarios(self, somef_data, file_name,
-                                                     expected_has_pitfall, expected_status,
+                                                     expected_has_warning, expected_status,
                                                      expected_is_url):
         """Test various scenarios for development status URL detection"""
         result = detect_development_status_url_pitfall(somef_data, file_name)
 
-        assert result["has_pitfall"] == expected_has_pitfall
+        assert result["has_warning"] == expected_has_warning
         assert result["file_name"] == file_name
         assert result["development_status"] == expected_status
         assert result["is_url"] == expected_is_url
@@ -347,7 +347,7 @@ class TestDetectDevelopmentStatusUrlPitfall:
         somef_data = {}
         result = detect_development_status_url_pitfall(somef_data, "test.json")
 
-        assert "has_pitfall" in result
+        assert "has_warning" in result
         assert "file_name" in result
         assert "development_status" in result
         assert "source" in result
@@ -372,7 +372,7 @@ class TestDetectDevelopmentStatusUrlPitfall:
 
         result = detect_development_status_url_pitfall(somef_data, "test.json")
 
-        assert result["has_pitfall"] is True
+        assert result["has_warning"] is True
         assert result["development_status"] == "https://example.com"
 
     @pytest.mark.parametrize("url_value", [
@@ -394,7 +394,7 @@ class TestDetectDevelopmentStatusUrlPitfall:
         }
 
         result = detect_development_status_url_pitfall(somef_data, "test.json")
-        assert result["has_pitfall"] is True
+        assert result["has_warning"] is True
         assert result["development_status"] == url_value
 
     @pytest.mark.parametrize("valid_status", [
@@ -420,7 +420,7 @@ class TestDetectDevelopmentStatusUrlPitfall:
         }
 
         result = detect_development_status_url_pitfall(somef_data, "test.json")
-        assert result["has_pitfall"] is False
+        assert result["has_warning"] is False
 
     def test_source_variations(self):
         """Test various source path formats for codemeta.json"""
@@ -445,7 +445,7 @@ class TestDetectDevelopmentStatusUrlPitfall:
             }
 
             result = detect_development_status_url_pitfall(somef_data, "test.json")
-            assert result["has_pitfall"] == should_trigger, f"Failed for source: {source}"
+            assert result["has_warning"] == should_trigger, f"Failed for source: {source}"
 
     def test_non_string_values(self):
         """Test that non-string values don't cause errors"""
@@ -467,4 +467,4 @@ class TestDetectDevelopmentStatusUrlPitfall:
             }
 
             result = detect_development_status_url_pitfall(somef_data, "test.json")
-            assert result["has_pitfall"] is False
+            assert result["has_warning"] is False

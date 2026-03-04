@@ -36,6 +36,11 @@ def check_url_status(url: str, timeout: int = 10) -> Dict:
         result["error"] = "Invalid URL format"
         return result
 
+    if url.startswith(('git+', 'git://', 'svn+', 'hg+', 'bzr+')):
+        result["is_accessible"] = True
+        result["status_code"] = 200
+        return result
+
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
