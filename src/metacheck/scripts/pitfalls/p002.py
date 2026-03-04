@@ -17,7 +17,7 @@ def extract_license_from_file(somef_data: Dict) -> Optional[Dict[str, str]]:
     for entry in license_entries:
         if "source" in entry:
             source = entry["source"]
-            if "LICENSE.md" in source:
+            if "license" in source.lower():
                 if "result" in entry and "value" in entry["result"]:
                     return {
                         "source": source,

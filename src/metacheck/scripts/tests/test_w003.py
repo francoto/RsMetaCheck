@@ -6,7 +6,7 @@ class TestDetectDualLicenseMissingCodemetaPitfall:
     """Test suite for detect_dual_license_missing_codemeta_pitfall function"""
 
     @pytest.mark.parametrize(
-        "somef_data,file_name,expected_has_pitfall,expected_dual_indicator,expected_codemeta_count",
+        "somef_data,file_name,expected_has_warning,expected_dual_indicator,expected_codemeta_count",
         [
             # No license key
             (
@@ -363,12 +363,12 @@ class TestDetectDualLicenseMissingCodemetaPitfall:
                 1
             ),
         ])
-    def test_detect_pitfall_scenarios(self, somef_data, file_name, expected_has_pitfall,
+    def test_detect_pitfall_scenarios(self, somef_data, file_name, expected_has_warning,
                                       expected_dual_indicator, expected_codemeta_count):
         """Test various dual license missing codemeta scenarios"""
         result = detect_dual_license_missing_codemeta_pitfall(somef_data, file_name)
 
-        assert result["has_pitfall"] == expected_has_pitfall
+        assert result["has_warning"] == expected_has_warning
         assert result["file_name"] == file_name
         assert result["has_dual_license_indicator"] == expected_dual_indicator
         assert result["codemeta_license_count"] == expected_codemeta_count
@@ -381,7 +381,7 @@ class TestDetectDualLicenseMissingCodemetaPitfall:
         somef_data = {}
         result = detect_dual_license_missing_codemeta_pitfall(somef_data, "test.json")
 
-        assert "has_pitfall" in result
+        assert "has_warning" in result
         assert "file_name" in result
         assert "has_dual_license_indicator" in result
         assert "codemeta_license_count" in result
@@ -433,7 +433,7 @@ class TestDetectDualLicenseMissingCodemetaPitfall:
         }
 
         result = detect_dual_license_missing_codemeta_pitfall(somef_data, "test.json")
-        assert result["has_pitfall"] == False
+        assert result["has_warning"] == False
         assert result["codemeta_license_count"] == 3
 
     def test_all_dual_license_patterns(self):
@@ -469,7 +469,7 @@ class TestDetectDualLicenseMissingCodemetaPitfall:
 
             result = detect_dual_license_missing_codemeta_pitfall(somef_data, "test.json")
             assert result["has_dual_license_indicator"] == True, f"Pattern '{pattern}' not detected"
-            assert result["has_pitfall"] == True
+            assert result["has_warning"] == True
 
     def test_non_codemeta_technique_not_counted(self):
         """Test that non-code_parser technique doesn't count as codemeta license"""
@@ -489,7 +489,7 @@ class TestDetectDualLicenseMissingCodemetaPitfall:
 
         result = detect_dual_license_missing_codemeta_pitfall(somef_data, "test.json")
         assert result["codemeta_license_count"] == 0
-        assert result["has_pitfall"] == True
+        assert result["has_warning"] == True
 
     def test_first_dual_license_pattern_wins(self):
         """Test that first matching pattern sets the source"""
@@ -535,7 +535,7 @@ class TestDetectDualLicenseMissingCodemetaPitfall:
         }
 
         result = detect_dual_license_missing_codemeta_pitfall(somef_data, "test.json")
-        assert result["has_pitfall"] == False
+        assert result["has_warning"] == False
         assert result["codemeta_license_count"] == 1
 
     def test_edge_case_exactly_one_codemeta_license(self):
@@ -556,7 +556,7 @@ class TestDetectDualLicenseMissingCodemetaPitfall:
 
         result = detect_dual_license_missing_codemeta_pitfall(somef_data, "test.json")
         assert result["codemeta_license_count"] == 1
-        assert result["has_pitfall"] == True
+        assert result["has_warning"] == True
 
     def test_edge_case_exactly_two_codemeta_licenses(self):
         """Test boundary condition with exactly 2 codemeta licenses"""
@@ -581,4 +581,4 @@ class TestDetectDualLicenseMissingCodemetaPitfall:
 
         result = detect_dual_license_missing_codemeta_pitfall(somef_data, "test.json")
         assert result["codemeta_license_count"] == 2
-        assert result["has_pitfall"] == False
+        assert result["has_warning"] == False

@@ -268,10 +268,10 @@ def format_evidence_text(pitfall_code: str, pitfall_result: Dict) -> str:
             reqs = pitfall_result["unversioned_requirements"]
             metadata_source = extract_metadata_source(pitfall_result)
             if isinstance(reqs, list) and len(reqs) > 0:
-                clean_reqs = [str(req) for req in reqs if req is not None][:3]
+                clean_reqs = [str(req) for req in reqs if req is not None]
                 if clean_reqs:
                     req_list = ', '.join(clean_reqs)
-                    return f"{evidence_base}{metadata_source} contains software requirements without versions: {req_list}{'...' if len(reqs) > 3 else ''}"
+                    return f"{evidence_base}{metadata_source} contains software requirements without versions: {req_list}"
         return f"{evidence_base}Software requirements found without version specifications"
 
     elif pitfall_code == "W002":
