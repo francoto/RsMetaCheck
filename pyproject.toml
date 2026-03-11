@@ -1,19 +1,21 @@
-[tool.poetry]
+[project]
 name = "metacheck"
 version = "0.2.1"
 description = "Detect metadata pitfalls in software repositories"
-authors = ["Anas El Hounsri"]
+authors = [{name = "Anas El Hounsri"}]
 readme = "README.md"
-packages = [{include = "metacheck", from = "src"}]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "requests>=2.31.0",
+    "somef>=0.9.13",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-requests = "*"
-somef = "*"
-
-[tool.poetry.scripts]
+[project.scripts]
 rsmetacheck = "metacheck.cli:cli"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/metacheck"]
+
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
